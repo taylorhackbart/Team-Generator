@@ -1,4 +1,3 @@
-const Employee = require("./lib/Employee")
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
@@ -11,13 +10,16 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-inquirer.promptManager([
+employeeArr=[]
+
+function promptManager(){
+    return inquirer.prompt([
     {
     type: "input",
     message: "Enter your name",
     name: "name",
     },
-{
+    {
     type: "input",
     message: "Enter your id number",
     name: "id",
@@ -33,17 +35,21 @@ inquirer.promptManager([
     name: "office",
     },
 
-]).then(answers =>{
+])
+.then(answers =>{
     const manager = new Manager(answers.name, answers.email, answers.id, answers.office)
-    array.push(manager)
+    employeeArr.push(manager)
+    nextQuestion();
 })
-    inquirer.promptEngineer([
+} 
+function promptEngineer(){
+    return inquirer.prompt([
         {
         type: "input",
         message: "Enter your name",
         name: "name",
         },
-    {
+        {
         type: "input",
         message: "Enter your id number",
         name: "id",
@@ -59,11 +65,17 @@ inquirer.promptManager([
         name: "github",
         },
 
-    ]).then(answers =>{
+    ])
+    .then(answers =>{
     const engineer = new Engineer(answers.name, answers.email, answers.id, answers.github)
-    array.push(engineer)
+    employeeArr.push(engineer)
+    nextQuestion();
 })
-    inquirer.promptIntern([
+}
+
+
+function promptIntern(){
+    inquirer.prompt([
         {
         type: "input",
         message: "Enter your name",
@@ -85,17 +97,46 @@ inquirer.promptManager([
         name: "school",
         },
 
-    ]).then(answers =>{
+    ])
+.then(answers =>{
     const intern = new Intern(answers.name, answers.email, answers.id, answers.school)
-    array.push(intern)
+    employeeArr.push(intern)
+    nextQuestion();
 })
-
+}
+function nextQuestion(){
+    inquirer.prompt([
+        {
+        type: "checkbox",
+        message: "Select type of employee to add",
+        name: "type",
+        choices: ["Engineer", "Manager", "Intern", "I am finished entering"]
+        }
+    ])
+    .then(answers =>{
+        if (answers === "Engineer"){
+            promptEngineer();
+        } else if (answers === "Manager"){
+            promptManager();
+        } else if (answers === "Intern"){
+            promptIntern();
+        } else if (answers === "I am finished entering"){
+            const renderHtml = render(employeeArr);
+            fs.writeFile(outputPath, renderHtml, function(error){
+                if(error){
+                    console.log(error);
+                }
+            })
+        }
+    })
+}
+nextQuestion();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 // After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
+// above) and pass in an employee containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
 
 // After you have your html, you're now ready to create an HTML file using the HTML
