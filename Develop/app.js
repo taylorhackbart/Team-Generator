@@ -11,8 +11,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 
 employeeArr=[]
-
-function promptManager(){
+function fullFunc(){
+function promptManager(response){
     return inquirer.prompt([
     {
     type: "input",
@@ -36,13 +36,13 @@ function promptManager(){
     },
 
 ])
-.then(answers =>{
-    const manager = new Manager(answers.name, answers.email, answers.id, answers.office)
+.then(response =>{
+    const manager = new Manager(response.name, response.email, response.id, response.office)
     employeeArr.push(manager)
     nextQuestion();
 })
 } 
-function promptEngineer(){
+function promptEngineer(response){
     return inquirer.prompt([
         {
         type: "input",
@@ -66,15 +66,15 @@ function promptEngineer(){
         },
 
     ])
-    .then(answers =>{
-    const engineer = new Engineer(answers.name, answers.email, answers.id, answers.github)
+    .then(response =>{
+    const engineer = new Engineer(response.name, response.email, response.id, response.github)
     employeeArr.push(engineer)
     nextQuestion();
 })
 }
 
 
-function promptIntern(){
+function promptIntern(response){
     inquirer.prompt([
         {
         type: "input",
@@ -98,8 +98,8 @@ function promptIntern(){
         },
 
     ])
-.then(answers =>{
-    const intern = new Intern(answers.name, answers.email, answers.id, answers.school)
+.then(response =>{
+    const intern = new Intern(response.name, response.email, response.id, response.school)
     employeeArr.push(intern)
     nextQuestion();
 })
@@ -113,44 +113,24 @@ function nextQuestion(){
         choices: ["Engineer", "Manager", "Intern", "I am finished entering"]
         }
     ])
-    .then(answers =>{
-        if (answers === "Engineer"){
-            promptEngineer();
-        } else if (answers === "Manager"){
-            promptManager();
-        } else if (answers === "Intern"){
-            promptIntern();
-        } else if (answers === "I am finished entering"){
-            const renderHtml = render(employeeArr);
-            fs.writeFile(outputPath, renderHtml, function(error){
-                if(error){
-                    console.log(error);
-                }
-            })
+    .then(response =>{
+        console.log(response)
+        switch (employeeArr){
+            case "Engineer": promptEngineer(employeeArr);
+        break;
+            case "Manager": promptManager(employeeArr);
+        break;
+            case "Intern": promptIntern(employeeArr);
+        break;
+            default: render(employeeArr);
         }
+      })
+    }
+    function createTeam(){
+    const html = render(employeeArr)
+    fs.writeFile("team.html", html, function(error){
+        if (error) console.log(error)
     })
+    } nextQuestion();
 }
-nextQuestion();
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an employee containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+fullFunc();
