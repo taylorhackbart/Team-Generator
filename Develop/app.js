@@ -10,9 +10,10 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-employeeArr=[]
+const employeeArr= []
+
 function fullFunc(){
-function promptManager(response){
+function promptManager(){
     return inquirer.prompt([
     {
     type: "input",
@@ -31,7 +32,7 @@ function promptManager(response){
     },
     {
     type: "input",
-    message: "managers, enter your office number",
+    message: "Enter your office number",
     name: "office",
     },
 
@@ -42,7 +43,7 @@ function promptManager(response){
     nextQuestion();
 })
 } 
-function promptEngineer(response){
+function promptEngineer(){
     return inquirer.prompt([
         {
         type: "input",
@@ -61,7 +62,7 @@ function promptEngineer(response){
         },
         {
         type: "input",
-        message: "engineers, enter your github",
+        message: "Enter your github",
         name: "github",
         },
 
@@ -74,7 +75,7 @@ function promptEngineer(response){
 }
 
 
-function promptIntern(response){
+function promptIntern(){
     inquirer.prompt([
         {
         type: "input",
@@ -93,7 +94,7 @@ function promptIntern(response){
         },
         {
         type: "input",
-        message: "Enter the name of your schools name",
+        message: "Enter the name of your school",
         name: "school",
         },
 
@@ -107,28 +108,28 @@ function promptIntern(response){
 function nextQuestion(){
     inquirer.prompt([
         {
-        type: "checkbox",
+        type: "list",
         message: "Select type of employee to add",
-        name: "type",
+        name: "newEmployee",
         choices: ["Engineer", "Manager", "Intern", "I am finished entering"]
         }
     ])
-    .then(response =>{
+    .then(response => {
         console.log(response)
-        switch (employeeArr){
-            case "Engineer": promptEngineer(employeeArr);
+        switch(response.newEmployee) {
+            case "Engineer": promptEngineer();
         break;
-            case "Manager": promptManager(employeeArr);
+            case "Manager": promptManager();
         break;
-            case "Intern": promptIntern(employeeArr);
+            case "Intern": promptIntern();
         break;
-            default: render(employeeArr);
+            default: createTeam();
         }
       })
     }
     function createTeam(){
-    const html = render(employeeArr)
-    fs.writeFile("team.html", html, function(error){
+        const html = render(employeeArr)
+        fs.writeFile("team.html", html, function(error){
         if (error) console.log(error)
     })
     } nextQuestion();
