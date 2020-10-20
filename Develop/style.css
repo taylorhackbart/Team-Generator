@@ -1,0 +1,10 @@
+body {
+    font-family: 'Commissioner', sans-serif;
+    font-size: small;
+}
+.card-header {
+    background-color: lavender;
+}
+.team-heading{
+    background-color:lightblue;
+}
