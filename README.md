@@ -3,7 +3,7 @@
 ## Description 
 I have created a javascript page that will compile the info for new team members added into the workplace. All employees will be prompted to enter their information including their name, employee ID number, and their email address. The Managers will need to enter their office number, Engineers will need to supply their GitHub username, and Interns will be asked to enter the name of the school they attend. This information is then compiled into an html file named "team.html". When you open the html in a browser, it will have all of the information entered. 
 
-To view a step-by-step tutorial of how this is run, click here < ADD VIDEO LINK >
+To view a step-by-step tutorial of how this is run, click <a href="https://drive.google.com/file/d/1lS-BZKkXhkH3aIXqrJBdXy3iTcLjlY27/view"> here </a>
 
 ## Usage
 To use this, you must fork the file and run "npm install" in your terminal. This should also install jest and inquirer. Open the app.js in your terminal and enter "node app.js" to begin answering the questions. Once you have finished entering, you will choose the "I am done entering" during the "nextQuestion" prompt function. 
